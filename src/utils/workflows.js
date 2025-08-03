@@ -38,14 +38,18 @@ export default function latestBlogs(payload) {
     rssFeed = `https://dev.to/feed/${payload.dev.username}`;
   } else if (payload.rssurl.show && payload.rssurl.username) {
     rssFeed = payload.rssurl.username;
-  } else {
+  } else if (
+    payload.medium.show &&
+    payload.medium.username &&
+    isMediumUsernameValid(payload.medium.username)
+  ) {
     rssFeed = `https://medium.com/feed/${payload.medium.username}`;
   }
   const data = `name: Latest blog post workflow
-on: 
+on:
     schedule:
         - cron: '0 * * * *'
-jobs: 
+jobs:
     update-readme-with-blog: 
         name: Update this repo's README with latest blog posts
         runs-on: ubuntu-latest
